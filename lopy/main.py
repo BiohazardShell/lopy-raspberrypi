@@ -37,7 +37,7 @@ while True:
         data = uart.readall()
         pycom.rgbled(0xFF0000) # set LED to RED on if data received
         if data == b'send':
-            send_lora("data")
+            send_lora("data") ############# not sure it's the we need it to work ...
             pycom.rgbled(0x00FF00) # set LED to GREEN if data is b'send'
         time.sleep(1)
         pycom.rgbled(0x000000)
