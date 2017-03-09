@@ -13,8 +13,8 @@ uart.write("Connected...")
 
 # Initialize LoRa in LORAWAN mode.
 lora = LoRa(mode=LoRa.LORAWAN)
-app_eui = binascii.unhexlify('AD A4 DA E3 AC 12 67 6B'.replace(' ',''))
-app_key = binascii.unhexlify('11 B0 28 2A 18 9B 75 B0 B4 D2 D8 C7 FA 38 54 8B'.replace(' ',''))
+app_eui = binascii.unhexlify('7079636f6d303031')
+app_key = binascii.unhexlify('6c6f7079636f6d72756c657332303137')
 lora.join(activation=LoRa.OTAA, auth=(app_eui, app_key), timeout=0)
 
 while not lora.has_joined():
