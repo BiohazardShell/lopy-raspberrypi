@@ -28,7 +28,7 @@ def send_lora(data):
     s = socket.socket(socket.AF_LORA, socket.SOCK_RAW)
     s.setsockopt(socket.SOL_LORA, socket.SO_DR, 5)
     s.setblocking(True)
-    s.send(str(data))
+    s.send(data)
     s.setblocking(False)
     uart.write(b'Success')
 
@@ -36,8 +36,7 @@ while True:
     if uart.any():
         data = uart.readall()
         pycom.rgbled(0xFF0000) # set LED to RED on if data received
-        if data == b'send':
-            send_lora("data") ############# not sure it's the we need it to work ...
-            pycom.rgbled(0x00FF00) # set LED to GREEN if data is b'send'
+        send_lora(str(data)) ############# not sure it's the we need it to work ...
+        pycom.rgbled(0x00FF00) # set LED to GREEN if data is b'send'
         time.sleep(1)
         pycom.rgbled(0x000000)
