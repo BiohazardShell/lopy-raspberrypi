@@ -8,8 +8,9 @@ import struct
 
 pycom.heartbeat(False) # turn off heartbeat
 
-uart = UART(1, 115200, bits=8, parity=None, stop=1)
-uart.write("Connected...")
+uart1 = UART(1, 115200, bits=8, parity=None, stop=1)
+uart1.init(baudrate=115200, bits=8, parity=None, stop=1, timeout_chars=2, pins=("P3", "P4"))
+uart1.write("Connected...")
 
 # Initialize LoRa in LORAWAN mode.
 lora = LoRa(mode=LoRa.LORAWAN)
@@ -23,21 +24,23 @@ while not lora.has_joined():
 
 print("Connected to the network.")
 
+# Open LoRaWAN socket
+s = socket.socket(socket.AF_LORA, socket.SOCK_RAW)
+s.setsockopt(socket.SOL_LORA, socket.SO_DR, 5)
+s.setblocking(True)
+
 def send_lora(data):
     print("Sending " + data)
-    s = socket.socket(socket.AF_LORA, socket.SOCK_RAW)
-    s.setsockopt(socket.SOL_LORA, socket.SO_DR, 5)
-    s.setblocking(True)
     s.send(str(data))
-    s.setblocking(False)
-    uart.write(b'Success')
+    uart1.write(b'Success')
 
 while True:
-    if uart.any():
-        data = uart.readall()
+    if uart1.any():
+        data = uart1.readall()
         pycom.rgbled(0xFF0000) # set LED to RED on if data received
         if data == b'send':
             send_lora("data")
             pycom.rgbled(0x00FF00) # set LED to GREEN if data is b'send'
         time.sleep(1)
         pycom.rgbled(0x000000)
+    time.sleep(0.25)
